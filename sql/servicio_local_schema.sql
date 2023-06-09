@@ -15,18 +15,20 @@ CREATE TABLE personas(
 	PRIMARY KEY (id_persona)
 );
 
-/*INSERT INTO personas (nombre, apellido, tipo_dni, dni, fecha_nacimiento, domicilio, barrio, telefono) VALUES(
--- 'Elias', 'Tofaletti', 'DNI', 44611684, '2003-03-11', 'Santander 139', 'Santa Brigida', 1136760920);*/
+SHOW COLUMNS FROM personas LIKE 'barrio';
+
+INSERT INTO personas (nombre, apellido, tipo_dni, dni, fecha_nacimiento, domicilio, barrio, telefono) VALUES(
+'Elias', 'Tofaletti', 'DNI', 44611684, '2003-03-11', 'Santander 139', 'Santa Brigida', 1136760920);
 
 CREATE TABLE responsables(
 	id_responsable INT NOT NULL AUTO_INCREMENT,
     id_persona INT NOT NULL,
-    relacion ENUM('Madre', 'Padre', 'Abuela', 'Abuelo', 'Tio', 'Tia', 'Tutor', 'Madrina', 'Padrino', 'Vecino', 'Vecina'),
+    relacion ENUM('Madre', 'Padre', 'Abuela', 'Abuelo', 'Tio', 'Tia', 'Tutor', 'Madrina', 'Padrino', 'Vecino', 'Vecina') DEFAULT NULL,
     PRIMARY  KEY (id_responsable),
     FOREIGN KEY (id_persona) REFERENCES personas (id_persona) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- INSERT INTO responsables (relacion) VALUES('Madre');
+INSERT INTO responsables (relacion) VALUES('Madre');
 
 CREATE TABLE chicos(
 	id_chico INT NOT NULL AUTO_INCREMENT,
@@ -34,11 +36,10 @@ CREATE TABLE chicos(
     id_responsable INT NOT NULL,
     apodo VARCHAR(45) DEFAULT NULL,
     PRIMARY KEY (id_chico),
-	FOREIGN KEY (id_persona) REFERENCES personas (id_persona) ON DELETE CASCADE ON UPDATE CASCADE,
-	FOREIGN KEY (id_responsable) REFERENCES responsables (id_responsable) ON DELETE CASCADE ON UPDATE CASCADE
+	FOREIGN KEY (id_persona) REFERENCES personas (id_persona) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- INSERT INTO chicos (apodo) VALUES ('Toffa');
+INSERT INTO chicos (apodo) VALUES ('Toffa');
 
 CREATE TABLE casos(
 	id_caso INT NOT NULL AUTO_INCREMENT,
@@ -47,15 +48,11 @@ CREATE TABLE casos(
     n_expediente INT NOT NULL,
     ingreso DATE,
     denunciante VARCHAR(100),
-    origen VARCHAR(100),
-    medidas_tomadas ENUM('Psicologicas', 'Mercadería') DEFAULT NULL,
-    observaciones LONGTEXT,
+    origen ENUM('Municipio', 'Iglesia', 'Comisaría', 'Civil', 'Salud', 'Escuelas', 'UFIS', 'Coordinación'),
+    medidas_tomadas JSON,
+    observaciones JSON,
     PRIMARY KEY (id_caso),
-	FOREIGN KEY (id_chico) REFERENCES chicos (id_chico) ON DELETE CASCADE ON UPDATE CASCADE,
-	FOREIGN KEY (id_responsable) REFERENCES responsables (id_responsable) ON DELETE CASCADE ON UPDATE CASCADE
+	FOREIGN KEY (id_responsable) REFERENCES responsables (id_responsable) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (id_chico) REFERENCES chicos (id_chico) ON DELETE CASCADE ON UPDATE CASCADE
 );
-
-
-/*INSERT INTO casos (n_expediente, ingreso, denunciante, origen, observaciones) VALUES (
-1111, '2023-06-06', 'Vecino', 'Comisaria', 'El chico tenia mucha hambre, y frio');*/
 
